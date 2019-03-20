@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="../public/css/bootstrap.min.css">
+<link rel="stylesheet" href="../public/css/font-awesome.min.css">
+<link rel="stylesheet" href="../public/plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" href="../public/plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../public/css/main.css">
+<script src="../public/libs/jquery.min.js"></script>
+<script src="../public/plugins/layer/layer.js"></script>
+<script src="../public/libs/bootstrap.min.js"></script>
+<script src="../public/libs/vue.min.js"></script>
+<script src="../public/plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../public/plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../public/plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../public/js/common.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<a v-if="hasPermission('historyprocess:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			<a v-if="hasPermission('historyprocess:view')" class="btn btn-primary" @click="view"><i class="fa fa-check-circle-o"></i>&nbsp;查看流程图片</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+	<div v-show="!showList" class="panel panel-default">
+		<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+		<fieldset>
+		    <legend>流程综合信息-【{{processDefinition.name}}】-{{historicProcessInstance.processInstanceId}}</legend>
+		    <table id="pinfo" class="table table-bordered table-hover table-condensed">
+		        <tr>
+		            <th width="100">流程ID</th>
+		            <td>
+		                {{historicProcessInstance.id}}
+		             </td>
+		            <th width="100">流程定义ID</th>
+		            <td>{{historicProcessInstance.processDefinitionId}}</td>
+		            <th width="100">业务KEY</th>
+		            <td>{{historicProcessInstance.businessKey}}</td>
+		        </tr>
+		        <tr>
+		            <th width="100">流程启动时间</th>
+		            <td>{{historicProcessInstance.startTime | time}}</td>
+		            <th width="100">流程结束时间</th>
+		            <td>{{historicProcessInstance.endTime | time}}</td>
+		            <th width="100">流程状态</th>
+		            <td v-if="historicProcessInstance.endTime == null " >未结束</td>
+		            <td v-if="historicProcessInstance.endTime != null " >已结束</td>
+		        </tr>
+		    </table>
+		</fieldset>
+		<fieldset>
+		    <legend>活动记录</legend>
+		    <table width="100%" class="table table-bordered table-hover table-condensed">
+		        <thead>
+		        <tr>
+		            <th>活动ID</th>
+		            <th>活动名称</th>
+		            <th>活动类型</th>
+		            <th>任务ID</th>
+		            <th>办理人</th>
+		            <th>活动开始时间</th>
+		            <th>活动结束时间</th>
+		            <th>活动耗时（秒）</th>
+		        </tr>
+		        </thead>
+		        <tbody>
+		            <tr v-for="activity in activities">
+		                <td>{{activity.id}}</td>
+		                <td>{{activity.activityName}}</td>
+		                <td>{{activity.activityType}}</td>
+		                <td>{{activity.taskId}}</td>
+		                <td>{{activity.assignee}}</td>
+		                <td>{{activity.startTime | time}}</td>
+		                <td>{{activity.endTime | time}}</td>
+		                <td>{{activity.durationInMillis / 1000}}</td>
+		            </tr>
+		        </tbody>
+		    </table>
+		</fieldset>
+		<fieldset>
+		    <legend>表单属性</legend>
+		    <table width="100%" class="table table-bordered table-hover table-condensed">
+		        <thead>
+		        <tr>
+		            <th>属性名称</th>
+		            <th>属性值</th>
+		            <th>任务ID</th>
+		            <th>设置时间</th>
+		        </tr>
+		        </thead>
+		        <tbody>
+		            <tr v-for="prop in formProperties">
+		                <td>{{prop.propertyId}}</td>
+		                <td>{{prop.propertyValue}}</td>
+		                <td>{{prop.taskId}}</td>
+		                <td>{{prop.time | time}}</td>
+		            </tr>
+		        </tbody>
+		    </table>
+		</fieldset>
+		<fieldset>
+		    <legend>相关变量</legend>
+		    <table width="100%" class="table table-bordered table-hover table-condensed">
+		        <thead>
+		        <tr>
+		            <th>变量名称</th>
+		            <th>变量类型</th>
+		            <th>值</th>
+		        </tr>
+		        </thead>
+		        <tbody>
+		            <tr v-for="variable in variableInstances">
+		                <td>{{variable.variableName}}</td>
+		                <td>{{variable.variableType.typeName}}</td>
+		                <td v-if="variable.variableType.typeName == 'date' " >{{variable.value | date}}</td>
+		                <td v-if="variable.variableType.typeName != 'date' " >{{variable.value}}</td>
+		            </tr>
+		        </tbody>
+		    </table>
+		</fieldset>
+		
+	</div>
+<script src="../public/js/generator/historyprocess.js"></script>
+</body>
+</html>

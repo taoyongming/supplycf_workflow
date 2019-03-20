@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.fintecher.wf.dao.SysJmsNoticeMessageDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="cn.fintecher.wf.entity.SysJmsNoticeMessageEntity" id="sysJmsNoticeMessageMap">
+        <result property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="queue" column="queue"/>
+        <result property="businessKey" column="business_key"/>
+        <result property="processInstanceId" column="process_instance_id"/>
+        <result property="sendTime" column="send_time"/>
+        <result property="confirmTime" column="confirm_time"/>
+        <result property="isConfirmed" column="is_confirmed"/>
+        <result property="status" column="status"/>
+        <result property="data" column="data"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="cn.fintecher.wf.entity.SysJmsNoticeMessageEntity">
+		select * from sys_jms_notice_message where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="cn.fintecher.wf.entity.SysJmsNoticeMessageEntity">
+		select * from sys_jms_notice_message
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from sys_jms_notice_message 
+	</select>
+	 
+	<insert id="save" parameterType="cn.fintecher.wf.entity.SysJmsNoticeMessageEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_jms_notice_message
+		(
+			`code`, 
+			`queue`, 
+			`business_key`, 
+			`process_instance_id`, 
+			`send_time`, 
+			`confirm_time`, 
+			`is_confirmed`, 
+			`status`, 
+			`data`
+		)
+		values
+		(
+			#{code}, 
+			#{queue}, 
+			#{businessKey}, 
+			#{processInstanceId}, 
+			#{sendTime}, 
+			#{confirmTime}, 
+			#{isConfirmed}, 
+			#{status}, 
+			#{data}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="cn.fintecher.wf.entity.SysJmsNoticeMessageEntity">
+		update sys_jms_notice_message 
+		<set>
+			<if test="code != null">`code` = #{code}, </if>
+			<if test="queue != null">`queue` = #{queue}, </if>
+			<if test="businessKey != null">`business_key` = #{businessKey}, </if>
+			<if test="processInstanceId != null">`process_instance_id` = #{processInstanceId}, </if>
+			<if test="sendTime != null">`send_time` = #{sendTime}, </if>
+			<if test="confirmTime != null">`confirm_time` = #{confirmTime}, </if>
+			<if test="isConfirmed != null">`is_confirmed` = #{isConfirmed}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="data != null">`data` = #{data}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from sys_jms_notice_message where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from sys_jms_notice_message where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

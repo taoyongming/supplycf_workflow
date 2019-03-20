@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder charset="UTF-8">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80} -
+				%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 按照每天生成日志文件 -->
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>/data/logs/wf/wf.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名 -->
+			<FileNamePattern>/data/logs/wf/wf-%d{yyyy-MM-dd}.log.%i
+			</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 100MB -->
+				<maxFileSize>20MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<Pattern>%-15d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level
+				%logger{80}[%class:%line] - %msg%n</Pattern>
+			<charset>UTF-8</charset>
+			<immediateFlush>true</immediateFlush>
+		</encoder>
+	</appender>
+
+	<logger name="org.springframework.web" level="INFO" />
+	<logger name="org.springboot.sample" level="TRACE" />
+
+	<!-- 开发、测试环境 -->
+	<springProfile name="dev,test,sit">
+		<logger name="org.springframework" level="INFO" />
+		<logger name="org.apache" level="INFO" />
+		<logger name="org.springboot.sample" level="INFO" />
+		<logger name="cn.fintecher" level="DEBUG" />
+		<logger name="org.activiti" level="INFO" />
+		
+		
+
+		<!-- root -->
+		<root level="INFO">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="FILE" />
+		</root>
+	</springProfile>
+
+	<!-- 生产环境 -->
+	<springProfile name="prod">
+		<logger name="org.springframework.web" level="ERROR" />
+		<logger name="org.springboot.sample" level="ERROR" />
+		<logger name="cn.fintecher" level="DEBUG" />
+
+		<!-- root -->
+		<root level="WARN">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="FILE" />
+		</root>
+	</springProfile>
+
+</configuration>

@@ -1,0 +1,33 @@
+# log
+logging:
+   config:
+     classpath: logback-spring.xml
+     path: /data/logs/wf
+     
+# Server
+server:
+  port: 8080
+  contextPath: /wf
+  
+spring:
+    datasource:
+        url: jdbc:mysql://localhost:3306/wf?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: 985321
+        # 连接池的配置信息
+        initialSize: 10
+        minIdle: 10
+        maxActive: 100
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 1 FROM DUAL
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+      
+mybatis:
+    mapperLocations: classpath:mapper/*.xml
+    configLocation: classpath:mybatis.xml

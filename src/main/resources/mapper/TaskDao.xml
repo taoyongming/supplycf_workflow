@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.fintecher.wf.dao.RuTaskDao">
+
+	<select id="queryObject" resultType="cn.fintecher.wf.entity.ActRuTask">
+		select * from act_ru_task where PROC_INST_ID_ = #{procInstId}
+	</select>
+
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.fintecher.wf.dao.ExecutionDao">
+
+	<update id="update" parameterType="cn.fintecher.wf.entity.ActRuExecution">
+		update act_ru_execution 
+		<set> 
+			<if test="businessKey != null">`BUSINESS_KEY_` = #{businessKey}, </if>
+		</set>
+		where ID_ = #{id}
+	</update>
+	
+	<select id="queryObject" resultType="cn.fintecher.wf.entity.ActRuExecution">
+		select * from act_ru_execution where ID_ = #{id}
+	</select>
+
+</mapper>

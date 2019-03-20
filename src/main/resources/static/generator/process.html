@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="../public/css/bootstrap.min.css">
+<link rel="stylesheet" href="../public/css/font-awesome.min.css">
+<link rel="stylesheet" href="../public/plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" href="../public/plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../public/css/main.css">
+<link rel="stylesheet" href="../public/css/datepicker.css">
+<script src="../public/libs/jquery.min.js"></script>
+<script src="../public/plugins/layer/layer.js"></script>
+<script src="../public/libs/bootstrap.min.js"></script>
+<script src="../public/libs/vue.min.js"></script>
+<script src="../public/plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../public/plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../public/plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../public/js/common.js"></script>
+<script src="../public/libs/ajaxupload.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<a v-if="hasPermission('process:start')" class="btn btn-primary" @click="start"><i class="fa fa-plus"></i>&nbsp;启动</a>
+			<a v-if="hasPermission('process:convert')" class="btn btn-primary" @click="convertToModel"><i class="fa fa-pencil-square-o"></i>&nbsp;转换为模型</a>
+			<a v-if="hasPermission('process:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			<a v-if="hasPermission('process:upload')" class="btn btn-primary" @click="deploy" id="upload"><i class="fa fa-upload"></i>&nbsp;上传</a>
+			<a v-if="hasPermission('process:viewXML')" class="btn btn-primary" @click="viewXML"><i class="fa fa-check-circle-o"></i>&nbsp;查看流程文件</a>
+			<a v-if="hasPermission('process:viewPic')" class="btn btn-primary" @click="viewPic"><i class="fa fa-check-circle-o"></i>&nbsp;查看流程图片</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+ 	<div v-show="!showList" class="panel panel-default">
+ 	
+ 		<div class="panel-heading">{{title}}</div>
+ 		<form class="form-horizontal" id="process">
+
+ 			  <input type="hidden" id="pdid" name="pdid" :value="currentPDID"/>
+
+ 			  <div v-if="hasFormKey == false">
+				  <template v-for="fp in startFormData.formProperties">	
+				  	
+					<div v-if="fp.type.name == 'string' || fp.type.name == 'long'" class="form-group">
+					   	<div class="col-sm-2 control-label">{{ fp.name }}</div>
+					   	<div class="col-sm-10">
+					      <input type="text" class="form-control" :id="fp.id" :name="fp.id"  placeholder=""/>
+					    </div>
+					</div>
+					<div v-if="fp.type.name == 'date'" class="form-group">
+					   	<div class="col-sm-2 control-label">{{ fp.name }}</div>
+					   	<div class="col-sm-10">
+					      <input type="text" class="form-control datepicker" :id="fp.id" :name="fp.id" :data-type="fp.type.name" data-date-format="yyyy-mm-dd"/>
+					    </div>
+					</div>
+					<div v-if="fp.type.name == 'javascript'">
+						<script type="text/javascript">{{fp.value}}</script>
+					</div>
+				  </template>
+			</div>
+			 <div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="startWithForm" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			 </div>
+ 		</form>
+ 	</div>
+ 
+<script src="../public/libs/bootstrap-datepicker.js"></script>
+<script src="../public/js/generator/process.js"></script>
+</body>
+</html>
